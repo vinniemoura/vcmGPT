@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chatbot Interface</title>
+    <style>
+        body {
+            background-color: blueviolet;
+            color: white;
+        }
+        .chatbox {
+            background-color: indigo;
+            border-radius: 10px;
+            margin-top: 20px;
+            padding: 20px;
+            height: 300px;
+            overflow-y: scroll;
+        }
+        input[type=text] {
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            width: 80%;
+        }
+        input[type=submit] {
+            background-color: indigo;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px;
+            cursor: pointer;
+            margin-left: 10px;
+            width: 18%;
+        }
+        .user {
+            text-align: right;
+            margin-top: 10px;
+        }
+        .assistant {
+            text-align: left;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chatbox">
+        <p>Hi! I'm your AI chatbot. What do you want to learn about?</p>
+    </div>
+    <div>
+        <form onsubmit="return false;">
+            <input type="text" id="userInput" placeholder="Enter your message...">
+            <input type="submit" value="Send" onclick="getResponse()">
+        </form>
+    </div>
+    <script>
+        function getResponse() {
+            var userInput = document.getElementById("userInput").value;
+            var chatbox = document.querySelector('.chatbox');
+            var userDiv = document.createElement("div");
+            userDiv.className = "user";
+            var userMsg = document.createElement("p");
+            userMsg.innerText = userInput;
+            userDiv.appendChild(userMsg);
+            chatbox.appendChild(userDiv);
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/get?msg=" + userInput, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var response = xhr.responseText;
+                    var assistantDiv = document.createElement("div");
+                    assistantDiv.className = "assistant";
+                    var assistantMsg = document.createElement("p");
+                    assistantMsg.innerText = response;
+                    assistantDiv.appendChild(assistantMsg);
+                    chatbox.appendChild(assistantDiv);
+                }
+            };
+            xhr.send();
+            document.getElementById("userInput").value = "";
+        }
+    </script>
+</body>
+</html>
