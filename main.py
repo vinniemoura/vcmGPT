@@ -5,7 +5,7 @@ import os
 import sys
   
 try:
-  openai.api_key = os.environ['OPENAI_API_KEY']
+  openai.api_key = os.environ.get('VERCEL_OPENAI_API_KEY')
 except KeyError:
   sys.stderr.write("""
   You haven't set up your API key yet.
